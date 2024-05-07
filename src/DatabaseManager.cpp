@@ -9,7 +9,9 @@
 #include <fstream>
 #include <iterator>
 #include <limits>
-
+#include <map>
+#include <unordered_map>
+#include <cctype> // Added to resolve the "qualified name is not allowed" error
 
 std::string join(const std::vector<std::string>& vec, const std::string& delim)
 {
@@ -61,6 +63,7 @@ void DatabaseManager::add_book(const Book& book)
   book_map[new_book.id] = &books.back(); // Add to map for quick access
   literature_title_map[{new_book.id, 'B'}] = new_book.title; // Update literatureTitleMap
   std::cout << "Book added. Total books: " << books.size() << std::endl;
+  write_all_to_file();
 }
 
 void DatabaseManager::list_all_books() {
@@ -93,6 +96,7 @@ void DatabaseManager::add_thesis(const Thesis& thesis)
   thesis_map[new_thesis.id] = &theses.back(); // Add to map for quick access
   literature_title_map[{new_thesis.id, 'T'}] = new_thesis.title; // Update literatureTitleMap
   std::cout << "Thesis added. Total theses: " << theses.size() << std::endl;
+  write_all_to_file();
 }
 
 // List all theses in the database
@@ -127,6 +131,7 @@ void DatabaseManager::add_journal(const Journal& journal)
   journal_map[new_journal.id] = &journals.back(); // Add to map for quick access
   literature_title_map[{new_journal.id, 'J'}] = new_journal.title; // Update literatureTitleMap
   std::cout << "Journal added. Total journals: " << journals.size() << std::endl;
+  write_all_to_file();
 }
 
 // List all journals in the database
@@ -308,3 +313,39 @@ void DatabaseManager::load_data_from_file(const std::string& file_path)
   file.close();
 }
 
+void DatabaseManager::write_all_to_file()
+{
+  std::ofstream file("./literature_catalogue.dat", std::ios_base::trunc); // Open in truncate mode to overwrite
+
+  if (!file.is_open())
+  {
+    std::cerr << "Unable to open file for writing.\n";
+    return;
+  }
+
+  // Write books
+  file << "== BOOKS ==\n";
+  for (const auto& book : books)
+  {
+    file << book.id << "|" << book.title << "|" << join(book.authors, ";") << "|" 
+         << book.publisher << "|" << book.subject << "|" << book.price << "\n";
+  }
+
+  // Write theses
+  file << "\n== THESIS ==\n";
+  for (const auto& thesis : theses)
+  {
+    file << thesis.id << "|" << thesis.title << "|" << thesis.author << "|" 
+         << thesis.supervisor << "|" << thesis.university << "\n";
+  }
+
+  // Write journals
+  file << "\n== JOURNALS ==\n";
+  for (const auto& journal : journals)
+  {
+    file << journal.id << "|" << journal.title << "|" << journal.impact_factor << "|" 
+         << journal.volumes << "|" << join(journal.editors, ";") << "|" << journal.scope << "\n";
+  }
+
+  file.close();
+}

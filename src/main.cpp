@@ -12,6 +12,9 @@ void displayMenu()
   std::cout << "Academic Literature Catalogue\n";
   std::cout << "========================================\n";
   std::cout << "1. Show all by type\n";
+  std::cout << "3. Add New Journal\n";
+  std::cout << "4. Add New Thesis\n";
+  std::cout << "5. Add New Book\n";
   std::cout << "8. Exit\n";
   std::cout << "========================================\n";
   std::cout << "Enter your choice: ";
@@ -72,6 +75,65 @@ int main()
           }
           break;
         }
+        case 3:
+        {
+          std::cout << "Adding new journal...\n";
+          std::string title;
+          float impactFactor;
+          int volumes;
+          std::vector<std::string> editors; // Assume you have a way to capture this
+          std::string scope;
+          std::cout << "Enter journal title: ";
+          getline(std::cin, title);
+          impactFactor = validateUserInput<float>("Enter impact factor: ", 0.0, std::numeric_limits<float>::max(), "Error reading impact factor. Please enter a valid number.\n");
+          volumes = validateUserInput<int>("Enter volumes: ", 1, std::numeric_limits<int>::max(), "Error reading volumes. Please enter a valid number.\n");
+          std::cout << "Enter scope: ";
+          getline(std::cin, scope);
+          dbManager.add_journal(Journal(0, title, impactFactor, volumes, editors, scope)); // Corrected to match the constructor signature
+          std::cout << "Journal added successfully.\n";
+          break;
+        }
+        case 4:
+        {
+          std::cout << "Adding new thesis...\n";
+          std::string title;
+          std::string author;
+          std::string supervisor;
+          std::string university;
+          std::cout << "Enter thesis title: ";
+          getline(std::cin, title);
+          std::cout << "Enter author: ";
+          getline(std::cin, author);
+          std::cout << "Enter supervisor: ";
+          getline(std::cin, supervisor);
+          std::cout << "Enter university: ";
+          getline(std::cin, university);
+          dbManager.add_thesis(Thesis(0, title, author, supervisor, university)); // Assuming ID is auto-incremented or not needed
+          std::cout << "Thesis added successfully.\n";
+          break;
+        }
+
+        case 5:
+        {
+          std::cout << "Adding new book...\n";
+          std::string title;
+          std::vector<std::string> authors;
+          std::string publisher;
+          std::string subject;
+          std::cout << "Enter book title: ";
+          getline(std::cin, title);
+          std::cout << "Enter author: ";
+          std::string author;
+          getline(std::cin, author);
+          authors.push_back(author); 
+          std::cout << "Enter publisher: ";
+          getline(std::cin, publisher);
+          std::cout << "Enter subject: ";
+          getline(std::cin, subject);
+          dbManager.add_book(Book(0, title, authors, publisher, subject)); // Assuming ID is auto-incremented or not needed
+          std::cout << "Book added successfully.\n";
+          break;
+        }
         case 8:
           std::cout << "Exiting program.\n";
           break;
@@ -87,5 +149,4 @@ int main()
   }
   return 0;
 }
-
 
