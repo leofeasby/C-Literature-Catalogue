@@ -66,6 +66,19 @@ void DatabaseManager::add_book(const Book& book)
   write_all_to_file();
 }
 
+void DatabaseManager::append_book_to_file(const Book& book)
+{
+  std::ofstream file("./literature_catalogue.dat", std::ios_base::app);
+  if (!file.is_open())
+    std::cerr << "Unable to open file for appending.\n";
+  else
+  {
+    file << book.id << "|" << book.title << "|" << join(book.authors, ";") << "|" 
+         << book.publisher << "|" << book.subject << "|" << book.price << "\n";
+    file.close();
+  }
+}
+
 void DatabaseManager::list_all_books() {
   if (books.empty()) {
     std::cout << "No books available." << std::endl;
@@ -97,6 +110,19 @@ void DatabaseManager::add_thesis(const Thesis& thesis)
   literature_title_map[{new_thesis.id, 'T'}] = new_thesis.title; // Update literatureTitleMap
   std::cout << "Thesis added. Total theses: " << theses.size() << std::endl;
   write_all_to_file();
+}
+
+void DatabaseManager::append_thesis_to_file(const Thesis& thesis)
+{
+  std::ofstream file("./literature_catalogue.dat", std::ios_base::app);
+  if (!file.is_open())
+    std::cerr << "Unable to open file for appending.\n";
+  else
+  {
+    file << thesis.id << "|" << thesis.title << "|" << thesis.author << "|" 
+         << thesis.supervisor << "|" << thesis.university << "\n";
+    file.close();
+  }
 }
 
 // List all theses in the database
@@ -134,6 +160,20 @@ void DatabaseManager::add_journal(const Journal& journal)
   write_all_to_file();
 }
 
+// Method to append a journal to the literature_catalogue.dat file
+void DatabaseManager::append_journal_to_file(const Journal& journal)
+{
+  std::ofstream file("./literature_catalogue.dat", std::ios_base::app); // Open in append mode
+  if (!file.is_open())
+    std::cerr << "Unable to open file for appending.\n";
+  else
+  {
+    // Assuming the journal details are to be written in a specific format
+    file << journal.id << "|" << journal.title << "|" << journal.impact_factor << "|" 
+         << journal.volumes << "|" << join(journal.editors, ";") << "|" << journal.scope << "\n";
+    file.close();
+  }
+}
 // List all journals in the database
 void DatabaseManager::list_all_journals() 
 {
