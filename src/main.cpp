@@ -5,13 +5,25 @@
 #include <vector>
 #include <thread>
 #include <chrono>
-
+void displayBookOpeningAnimation() 
+{
+  const std::vector<std::string> frames = { "Welcome to the Academic Literature Catalogue" };
+  const std::string colorStart = "\033[1;36m"; // Cyan color start
+  const std::string colorEnd = "\033[0m"; // Reset color
+  for (const auto& frame : frames)
+  {
+    std::cout << "\033[2J\033[1;1H"; // Clear the screen and move cursor to home position
+    std::cout << colorStart << frame << colorEnd << std::endl; // Apply cyan color to frame
+    std::this_thread::sleep_for(std::chrono::milliseconds(250)); // Adjust time for each frame to control animation speed
+  }
+}
 
 void displayMenu() 
 {
   std::cout << "Academic Literature Catalogue\n";
   std::cout << "========================================\n";
   std::cout << "1. Show all by type\n";
+  std::cout << "2. Search\n";
   std::cout << "3. Add New Journal\n";
   std::cout << "4. Add New Thesis\n";
   std::cout << "5. Add New Book\n";
@@ -47,6 +59,7 @@ int main()
 {
   try
   {
+    displayBookOpeningAnimation();
     std::cout << "Initializing Database Manager...\n";
     DatabaseManager dbManager; // Updated to reflect the new constructor
     int choice = 0;
@@ -77,6 +90,43 @@ int main()
           }
           break;
         }
+        case 2:
+        {
+          std::cout << "Search Options:\n";
+          std::cout << "1. By Title\n";
+          std::cout << "2. By Author\n";
+          int searchChoice = validateUserInput<int>("Enter your choice: ", 1, 2, "Invalid search option. Please try again.\n");
+
+          switch (searchChoice) 
+          {
+            case 1:
+            {
+              std::cout << "Searching literature by title...\n";
+              std::string title;
+              std::cout << "Enter title to search: ";
+              getline(std::cin, title);
+              if (!title.empty()) 
+                dbManager.search_literature_by_title(title);
+              else 
+                std::cout << "Invalid input. Title cannot be empty.\n";
+              break;
+            }
+            case 2:
+            {
+              std::cout << "Enter author name: ";
+              std::string author;
+              getline(std::cin, author);
+              if (!author.empty()) 
+                dbManager.search_by_author(author);
+              else 
+                std::cout << "Invalid input. Author name cannot be empty.\n";
+              break;
+            }
+            default:
+              std::cout << "Invalid search option. Please try again.\n";
+          }
+        }
+        break;
         case 3:
         {
           std::cout << "Adding new journal...\n";

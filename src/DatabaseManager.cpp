@@ -79,6 +79,72 @@ void DatabaseManager::append_book_to_file(const Book& book)
   }
 }
 
+void DatabaseManager::search_literature_by_title(const std::string& title)
+{
+  std::string lower_title = title;
+  std::transform(lower_title.begin(), lower_title.end(), lower_title.begin(), tolower);
+  bool found = false;
+  for (const auto& book : books)
+  {
+    std::string lower_book_title = book.title;
+    std::transform(lower_book_title.begin(), lower_book_title.end(), lower_book_title.begin(), tolower);
+    if (lower_book_title.find(lower_title) != std::string::npos)
+    {
+      std::cout << R"(
+  _________
+ /         \
+ |   ID    |   )" << book.id << R"(
+ |  Title  |   )" << book.title << R"(
+ |  Author |   )" << join(book.authors, ", ") << R"(
+ |Publisher|   )" << book.publisher << R"(
+ |  Price  |   $)" << book.price << R"(
+ \_________/
+      )" << std::endl;
+      found = true;
+    }
+  }
+  for (const auto& thesis : theses)
+  {
+    std::string lower_thesis_title = thesis.title;
+    std::transform(lower_thesis_title.begin(), lower_thesis_title.end(), lower_thesis_title.begin(), tolower);
+    if (lower_thesis_title.find(lower_title) != std::string::npos)
+    {
+      std::cout << R"(
+  _________
+ /         \
+ |   ID    |   )" << thesis.id << R"(
+ |  Title  |   )" << thesis.title << R"(
+ | Author  |   )" << thesis.author << R"(
+ |Supervisor|  )" << thesis.supervisor << R"(
+ |University|  )" << thesis.university << R"(
+ \_________/
+      )" << std::endl;
+      found = true;
+    }
+  }
+  for (const auto& journal : journals)
+  {
+    std::string lower_journal_title = journal.title;
+    std::transform(lower_journal_title.begin(), lower_journal_title.end(), lower_journal_title.begin(), tolower);
+    if (lower_journal_title.find(lower_title) != std::string::npos)
+    {
+      std::cout << R"(
+  _________
+ /         \
+ |   ID    |   )" << journal.id << R"(
+ |  Title  |   )" << journal.title << R"(
+ | Impact  |   )" << journal.impact_factor << R"(
+ | Volumes |   )" << journal.volumes << R"(
+ | Editors |   )" << join(journal.editors, ", ") << R"(
+ |  Scope  |   )" << journal.scope << R"(
+ \_________/
+      )" << std::endl;
+      found = true;
+    }
+  }
+  if (!found)
+    std::cout << "No literature found with title containing: " << title << std::endl;
+}
 void DatabaseManager::list_all_books() {
   if (books.empty()) {
     std::cout << "No books available." << std::endl;
@@ -199,6 +265,35 @@ void DatabaseManager::list_all_journals()
   }
 }
 
+void DatabaseManager::search_thesis_by_title(const std::string& title) 
+{
+  for (const auto& thesis : theses)
+  {
+    if (thesis.title.find(title) != std::string::npos)
+    {
+      std::cout << "Thesis ID: " << thesis.id << std::endl;
+      std::cout << "Thesis Title: " << thesis.title << std::endl;
+      // Print other thesis details
+    }
+  }
+}
+
+void DatabaseManager::search_journal_by_title(const std::string& title) 
+{
+  for (const auto& journal : journals)
+  {
+    if (journal.title.find(title) != std::string::npos)
+    {
+      std::cout << "Journal ID: " << journal.id << std::endl;
+      std::cout << "Journal Title: " << journal.title << std::endl;
+      std::cout << "Volume: " << journal.volumes << std::endl;
+      std::cout << "Impact Factor: " << journal.impact_factor << std::endl;
+      std::cout << "Volumes: " << journal.volumes << std::endl;
+      std::cout << "Editors: " << join(journal.editors, ", ") << std::endl;
+      std::cout << "Scope: " << journal.scope << std::endl;
+    }
+  }
+}
 void DatabaseManager::load_data_from_file(const std::string& file_path) 
 {
   std::ifstream file(file_path);
@@ -352,6 +447,140 @@ void DatabaseManager::load_data_from_file(const std::string& file_path)
 
   file.close();
 }
+void DatabaseManager::search_by_author(const std::string& author_query)
+{
+  bool found = false;
+  std::string lower_author_query = author_query;
+  std::transform(lower_author_query.begin(), lower_author_query.end(), lower_author_query.begin(), tolower);
+  for (const auto& book : books)
+  {
+    for (const auto& author : book.authors)
+    {
+      std::string lower_author = author;
+      std::transform(lower_author.begin(), lower_author.end(), lower_author.begin(), tolower);
+      if (lower_author.find(lower_author_query) != std::string::npos)
+      {
+        std::cout << R"(
+    _________
+   /         \
+   |   ID    |   )" << book.id << R"(
+   |  Title  |   )" << book.title << R"(
+   |  Author |   )" << join(book.authors, ", ") << R"(
+   |Publisher|   )" << book.publisher << R"(
+   |  Price  |   $)" << book.price << R"(
+   \_________/
+        )" << std::endl;
+        found = true;
+      }
+    }
+  }
+  for (const auto& thesis : theses)
+  {
+    std::string lower_thesis_author = thesis.author;
+    std::transform(lower_thesis_author.begin(), lower_thesis_author.end(), lower_thesis_author.begin(), tolower);
+    if (lower_thesis_author.find(lower_author_query) != std::string::npos)
+    {
+      std::cout << R"(
+    _________
+   /         \
+   |   ID    |   )" << thesis.id << R"(
+   |  Title  |   )" << thesis.title << R"(
+   | Author   |   )" << thesis.author << R"(
+   |Supervisor|  )" << thesis.supervisor << R"(
+   |University|  )" << thesis.university << R"(
+   \_________/
+        )" << std::endl;
+      found = true;
+    }
+  }
+  for (const auto& journal : journals)
+  {
+    for (const auto& editor : journal.editors)
+    {
+      std::string lower_editor = editor;
+      std::transform(lower_editor.begin(), lower_editor.end(), lower_editor.begin(), tolower);
+      if (lower_editor.find(lower_author_query) != std::string::npos)
+      {
+        std::cout << R"(
+    _________
+   /         \
+   |   ID    |   )" << journal.id << R"(
+   |  Title  |   )" << journal.title << R"(
+   | Impact  |   )" << journal.impact_factor << R"(
+   | Volumes |   )" << journal.volumes << R"(
+   | Editors |   )" << join(journal.editors, ", ") << R"(
+   |  Scope  |   )" << journal.scope << R"(
+   \_________/
+        )" << std::endl;
+        found = true;
+      }
+    }
+  }
+  if (!found)
+    std::cout << "No literature found by author: " << author_query << std::endl;
+}
+
+void DatabaseManager::search_by_type(const std::string& type)
+{
+  if (type == "book")
+    list_all_books();
+  else if (type == "thesis")
+    list_all_theses();
+  else if (type == "journal")
+    list_all_journals();
+  else
+    std::cout << "Invalid type. Please enter 'book', 'thesis', or 'journal'." << std::endl;
+}
+
+void DatabaseManager::remove_book_by_id(int id)
+{
+  display_book_ids();
+  std::cout << "\nEnter the ID of the book to remove: ";
+  auto it = book_map.find(id);
+  if(it != book_map.end())
+  {
+    books.erase(std::remove(books.begin(), books.end(), *(it->second)), books.end());
+    book_map.erase(it);
+    literature_title_map.erase({id, 'B'}); // Update literatureTitleMap
+    std::cout << "Book removed successfully.\n";
+    write_all_to_file();
+  }
+  else
+    std::cout << "Book with ID " << id << " not found.\n";
+}
+
+void DatabaseManager::remove_thesis_by_id(int id)
+{
+  display_thesis_ids();
+  std::cout << "\nEnter the ID of the thesis to remove: ";
+  auto it = thesis_map.find(id);
+  if(it != thesis_map.end())
+  {
+    theses.erase(std::remove(theses.begin(), theses.end(), *(it->second)), theses.end());
+    thesis_map.erase(it);
+    literature_title_map.erase({id, 'T'}); // Update literatureTitleMap
+    std::cout << "Thesis removed successfully.\n";
+    write_all_to_file();
+  }
+  else
+    std::cout << "Thesis with ID " << id << " not found.\n";
+}
+void DatabaseManager::remove_journal_by_id(int id)
+{
+  display_journal_ids();
+  std::cout << "\nEnter the ID of the journal to remove: ";
+  auto it = journal_map.find(id);
+  if (it != journal_map.end())
+  {
+    journals.erase(std::remove(journals.begin(), journals.end(), *(it->second)), journals.end());
+    journal_map.erase(it);
+    literature_title_map.erase({id, 'J'}); // Update literatureTitleMap
+    std::cout << "Journal removed successfully.\n";
+    write_all_to_file();
+  }
+  else
+    std::cout << "Journal with ID " << id << " not found.\n";
+}
 
 void DatabaseManager::write_all_to_file()
 {
@@ -388,4 +617,190 @@ void DatabaseManager::write_all_to_file()
   }
 
   file.close();
+}
+bool DatabaseManager::edit_book_by_id(int id) 
+{
+  auto it = std::find_if(books.begin(), books.end(), [id](const Book& book) { return book.id == id; });
+  if (it != books.end())
+  {
+    std::cout << "Editing book: " << it->title << std::endl;
+    std::string input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore leftover newline character
+    std::cout << "Enter new title (Leave blank to keep. Current: " << it->title << "): ";
+    std::getline(std::cin, input);
+    if (!input.empty()) it->title = input;
+    std::cout << std::endl; // Ensure a line break here
+
+    std::cout << "Enter new publisher (current: " << it->publisher << "): ";
+    std::getline(std::cin, input);
+    if (!input.empty()) it->publisher = input;
+    std::cout << std::endl; // Added line break
+    std::cout << "Enter new subject (current: " << it->subject << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->subject = input;
+
+    std::cout << "Enter new price (current: $" << it->price << "): ";
+    float price;
+    if (std::cin >> price && price >= 0) // Check for valid price input
+    {
+      it->price = price;
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+    }
+    else
+    {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      std::cout << "Invalid input for price. Please enter a positive number.\n";
+    }
+    std::cout << std::endl; // Added line break
+
+    write_all_to_file();
+    std::cout << "Book updated successfully.\n";
+    return true; // indicate success
+  }
+  else
+  {
+    std::cout << "Book with ID " << id << " not found.\n";
+    return false; // indicate failure
+  }
+}
+
+bool DatabaseManager::edit_thesis_by_id(int id)
+{
+  auto it = std::find_if(theses.begin(), theses.end(), [id](const Thesis& thesis) { return thesis.id == id; });
+  if (it != theses.end())
+  {
+    std::cout << "Editing thesis: " << it->title << std::endl;
+    std::string input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore leftover newline character
+    std::cout << "Enter new title (Leave blank to keep. Current: " << it->title << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->title = input;
+
+    std::cout << "Enter new author (current: " << it->author << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->author = input;
+
+    std::cout << "Enter new supervisor (current: " << it->supervisor << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->supervisor = input;
+
+    std::cout << "Enter new university (current: " << it->university << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->university = input;
+
+    write_all_to_file();
+    std::cout << "Thesis updated successfully.\n";
+    return true; // indicate success
+  }
+  else
+  {
+    std::cout << "Thesis with ID " << id << " not found.\n";
+    return false; // indicate failure
+  }
+}
+
+bool DatabaseManager::edit_journal_by_id(int id)
+{
+  auto it = std::find_if(journals.begin(), journals.end(), [id](const Journal& journal) { return journal.id == id; });
+  if (it != journals.end())
+  {
+    std::cout << "Editing journal: " << it->title << std::endl;
+    std::string input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore leftover newline character
+    std::cout << "Enter new title (Leave blank to keep. Current: " << it->title << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->title = input;
+
+    float impact_factor;
+    std::cout << "Enter new impact factor (current: " << it->impact_factor << "): ";
+    if (std::cin >> impact_factor && impact_factor > 0) // Validate positive impact factor
+    {
+      it->impact_factor = impact_factor;
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+    }
+    else
+    {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      std::cout << "Invalid input for impact factor. Please enter a positive number.\n";
+    }
+    std::cout << std::endl; // Added line break
+
+    int volumes;
+    std::cout << "Enter new volumes (current: " << it->volumes << "): ";
+    if (std::cin >> volumes && volumes > 0) // Validate positive volumes
+    {
+      it->volumes = volumes;
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+    }
+    else
+    {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      std::cout << "Invalid input for volumes. Please enter a positive number.\n";
+    }
+    std::cout << std::endl; // Added line break
+
+    std::cout << "Enter new editors (current: " << join(it->editors, ", ") << "): ";
+    getline(std::cin, input);
+    if (!input.empty()) it->editors = splitString(input, ',');
+
+    std::cout << "Enter new scope (current: " << it->scope << "): ";
+    getline(std::cin, input);
+    std::cout << std::endl; // Added line break
+    if (!input.empty()) it->scope = input;
+
+    write_all_to_file();
+    std::cout << "Journal updated successfully.\n";
+    return true; // indicate success
+  }
+  else
+  {
+    std::cout << "Journal with ID " << id << " not found.\n";
+    return false; // indicate failure
+  }
+}
+int DatabaseManager::get_total_entries() const 
+{
+  return books.size() + theses.size() + journals.size();
+}
+
+int DatabaseManager::get_total_books() const 
+{
+  return books.size();
+}
+
+int DatabaseManager::get_total_theses() const 
+{
+  return theses.size();
+}
+
+int DatabaseManager::get_total_journals() const 
+{
+  return journals.size();
+}
+
+void DatabaseManager::display_book_ids() const 
+{
+  for (const auto& book : books)
+    std::cout << book.id << " ";
+}
+
+void DatabaseManager::display_thesis_ids() const 
+{
+  for (const auto& thesis : theses)
+    std::cout << thesis.id << " ";
+}
+
+void DatabaseManager::display_journal_ids() const 
+{
+  for (const auto& journal : journals)
+    std::cout << journal.id << " ";
 }
