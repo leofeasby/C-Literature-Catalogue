@@ -15,6 +15,7 @@ void displayMenu()
   std::cout << "3. Add New Journal\n";
   std::cout << "4. Add New Thesis\n";
   std::cout << "5. Add New Book\n";
+  std::cout << "6. Remove / Burn Entry\n";
   std::cout << "7. Edit Entry\n";
   std::cout << "8. Exit\n";
   std::cout << "========================================\n";
@@ -135,47 +136,66 @@ int main()
           std::cout << "Book added successfully.\n";
           break;
         }
-        case 7:
+        case 6:
         {
-          std::cout << "Enter the type of literature to edit (book, thesis, journal): ";
+          std::cout << "Enter the type of literature to remove (book, thesis, journal): ";
           std::string type;
           getline(std::cin, type);
-          if(type == "book")
-          {
-            std::cout << "Available Book IDs: ";
-            dbManager.display_book_ids();
-            std::cout << "\nEnter the ID of the book to edit: ";
-            int id;
-            std::cin >> id;
-            if(dbManager.edit_book_by_id(id))
-              displayMenu();
-          }
-          else if(type == "thesis")
-          {
-            std::cout << "Available Thesis IDs: ";
-            dbManager.display_thesis_ids();
-            std::cout << "\nEnter the ID of the thesis to edit: ";
-            int id;
-            std::cin >> id;
-            if(dbManager.edit_thesis_by_id(id))
-              displayMenu();
-          }
-          else if(type == "journal")
-          {
-            std::cout << "Available Journal IDs: ";
-            dbManager.display_journal_ids();
-            std::cout << "\nEnter the ID of the journal to edit: ";
-            int id;
-            std::cin >> id;
-            if(dbManager.edit_journal_by_id(id))
-              displayMenu();
-          }
-          else
-          {
+          std::cout << "Enter the ID of the " << type << " to remove: ";
+          int id;
+          std::cin >> id;
+          if(type == "book") {
+            dbManager.remove_book_by_id(id);
+          } else if(type == "thesis") {
+            dbManager.remove_thesis_by_id(id);
+          } else if(type == "journal") {
+            dbManager.remove_journal_by_id(id);
+          } else {
             std::cout << "Invalid type entered.\n";
-          }
-          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Flush the newline character out of the buffer
+         }
           break;
+      }
+      case 7:
+      {
+        std::cout << "Enter the type of literature to edit (book, thesis, journal): ";
+        std::string type;
+        getline(std::cin, type);
+        if(type == "book")
+        {
+          std::cout << "Available Book IDs: ";
+          dbManager.display_book_ids();
+          std::cout << "\nEnter the ID of the book to edit: ";
+          int id;
+          std::cin >> id;
+          if(dbManager.edit_book_by_id(id))
+            displayMenu();
+        }
+        else if(type == "thesis")
+        {
+          std::cout << "Available Thesis IDs: ";
+          dbManager.display_thesis_ids();
+          std::cout << "\nEnter the ID of the thesis to edit: ";
+          int id;
+          std::cin >> id;
+          if(dbManager.edit_thesis_by_id(id))
+            displayMenu();
+        }
+        else if(type == "journal")
+        {
+          std::cout << "Available Journal IDs: ";
+          dbManager.display_journal_ids();
+          std::cout << "\nEnter the ID of the journal to edit: ";
+          int id;
+          std::cin >> id;
+          if(dbManager.edit_journal_by_id(id))
+            displayMenu();
+        }
+        else
+        {
+          std::cout << "Invalid type entered.\n";
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Flush the newline character out of the buffer
+        break;
         }
         case 8:
           std::cout << "Exiting program.\n";
@@ -192,4 +212,3 @@ int main()
   }
   return 0;
 }
-
