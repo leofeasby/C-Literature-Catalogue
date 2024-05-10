@@ -804,3 +804,54 @@ void DatabaseManager::display_journal_ids() const
   for (const auto& journal : journals)
     std::cout << journal.id << " ";
 }
+
+int DatabaseManager::display_average_book_price() const 
+{
+  if (books.empty())
+  {
+    std::cout << "No books available to calculate the average price.\n";
+    return 0;
+  }
+  float total = 0;
+  for (const auto& book : books) 
+  {
+    total += book.price;
+  }
+  float average = total / books.size();
+  std::cout << "Average book price: $" << average << std::endl;
+  return 1;
+}
+
+void DatabaseManager::display_cheapest_book() const 
+{
+  if (books.empty())
+  {
+    std::cout << "No books available.\n";
+    return;
+  }
+  auto cheapest = std::min_element(books.begin(), books.end(), 
+    [](const Book& a, const Book& b) { return a.price < b.price; });
+  std::cout << "Cheapest Book: " << cheapest->title << " - $" << cheapest->price << std::endl;
+}
+
+void DatabaseManager::display_most_expensive_book() const 
+{
+  if (books.empty())
+  {
+    std::cout << "No books available.\n";
+    return;
+  }
+  auto most_expensive = std::max_element(books.begin(), books.end(), 
+    [](const Book& a, const Book& b) { return a.price < b.price; });
+  std::cout << "Most Expensive Book: " << most_expensive->title << " - $" << most_expensive->price << std::endl;
+}
+
+std::string DatabaseManager::get_title_by_id(int id, char type) 
+{
+  auto it = literature_title_map.find({id, type});
+  if (it != literature_title_map.end())
+  {
+    return it->second;
+  }
+  return "No title found for this ID.";
+}

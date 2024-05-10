@@ -39,42 +39,48 @@ private:
   int next_book_id;
   int next_thesis_id;
   int next_journal_id;
+
 public:
-  DatabaseManager();
+  DatabaseManager(); // Updated constructor without dbPath
   ~DatabaseManager();
-  void add_book(const Book& book);
-  void search_literature_by_title(const std::string& title);
-  void list_all_books();
-  void add_thesis(const Thesis& thesis);
-  void list_all_theses();
-  void add_journal(const Journal& journal);
-  void list_all_journals();
-  void search_thesis_by_title(const std::string& title);
-  void search_journal_by_title(const std::string& title);
-  void load_data_from_file(const std::string& file_path);
-  void append_journal_to_file(const Journal& journal);
-  void append_book_to_file(const Book& book);
-  void append_thesis_to_file(const Thesis& thesis);
-  void search_by_author(const std::string& author);
-  void search_by_type(const std::string& type);
-  void remove_book_by_id(int id);
-  void remove_thesis_by_id(int id);
-  void remove_journal_by_id(int id);
-  void write_all_to_file();
-  bool edit_book_by_id(int id);
-  bool edit_thesis_by_id(int id);
-  bool edit_journal_by_id(int id);
-  int get_total_entries() const;
-  int get_total_books() const;
-  int get_total_theses() const;
-  int get_total_journals() const;
-  void display_book_ids() const;
-  void display_thesis_ids() const;
-  void display_journal_ids() const;
-  int display_average_book_price() const;
-  void display_cheapest_book() const;
-  void display_most_expensive_book() const;
-  const std::vector<Book>& get_books() const;
-  const std::vector<Thesis>& get_theses() const;
-  const std::vector<Journal>& get_journals() const;
-  std::string get_title_by_id(int id, char type);
+  // Method declarations...
+  void add_book(const Book& book); // Added method declaration
+  void search_literature_by_title(const std::string& title); // Added method declaration
+  void list_all_books(); // Add this line
+  void add_thesis(const Thesis& thesis); // Add this line
+  void list_all_theses(); // Add this line to declare the method
+  void add_journal(const Journal& journal); // Add this line to declare the method
+  void list_all_journals(); // Add this line to declare the method
+  void search_thesis_by_title(const std::string& title); // Add this line
+  void search_journal_by_title(const std::string& title); // Add this line
+  void load_data_from_file(const std::string& file_path); // Add this line
+  void append_journal_to_file(const Journal& journal); // Add this line to declare the method
+  void append_book_to_file(const Book& book); // Add this line to declare the method
+  void append_thesis_to_file(const Thesis& thesis); // Add this line to declare the method
+  void search_by_author(const std::string& author); // Add this line
+  void search_by_type(const std::string& type); // Add this line
+  void remove_book_by_id(int id); // Add this line to declare the method
+  void remove_thesis_by_id(int id); // Add this line to declare the method
+  void remove_journal_by_id(int id); // Add this line to declare the method
+  void write_all_to_file(); // Add this line to declare the method
+  bool edit_book_by_id(int id); // Add this line
+  bool edit_thesis_by_id(int id); // Add this line
+  bool edit_journal_by_id(int id); // Change return type to bool
+  int get_total_entries() const; // Add this line
+  int get_total_books() const; // Add this line
+  int get_total_theses() const; // Add this line
+  int get_total_journals() const; // Add this line
+  void display_book_ids() const; // Add this line to declare the method
+  void display_thesis_ids() const; // Add this line to declare the method
+  void display_journal_ids() const; // Add this line to declare the method
+  int display_average_book_price() const; // Add this line
+  void display_cheapest_book() const; // Add this line
+  void display_most_expensive_book() const; // Add this line
+  const std::vector<Book>& get_books() const { return books; } // Add this line
+  const std::vector<Thesis>& get_theses() const { return theses; } // Add this line
+  const std::vector<Journal>& get_journals() const { return journals; } // Add this line
+  std::string get_title_by_id(int id, char type); // Add this line to declare the method
+};
+
+#endif
+

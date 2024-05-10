@@ -30,6 +30,9 @@ void displayMenu()
   std::cout << "6. Display Total Number of Entries\n";
   std::cout << "7. Remove / Burn Entry\n";
   std::cout << "8. Edit Entry\n";
+  std::cout << "9. Display average book price\n";
+  std::cout << "10. Display cheapest book\n";
+  std::cout << "11. Display most expensive book\n";
   std::cout << "12. Exit\n";
   std::cout << "========================================\n";
   std::cout << "Enter your choice: ";
@@ -96,7 +99,8 @@ int main()
           std::cout << "Search Options:\n";
           std::cout << "1. By Title\n";
           std::cout << "2. By Author\n";
-          int searchChoice = validateUserInput<int>("Enter your choice: ", 1, 2, "Invalid search option. Please try again.\n");
+          std::cout << "3. By ID\n";
+          int searchChoice = validateUserInput<int>("Enter your choice: ", 1, 3, "Invalid search option. Please try again.\n");
 
           switch (searchChoice) 
           {
@@ -121,6 +125,24 @@ int main()
                 dbManager.search_by_author(author);
               else 
                 std::cout << "Invalid input. Author name cannot be empty.\n";
+              break;
+            }
+            case 3:
+            {
+              std::cout << "Enter ID (number only): ";
+              int id = validateUserInput<int>("", 1, std::numeric_limits<int>::max(), "Invalid ID. Please enter a valid number.\n");
+              std::cout << "Enter type (B for Book, T for Thesis, J for Journal): ";
+              char type;
+              std::cin >> type;
+              type = toupper(type); // Convert to uppercase to make capitalization not matter
+              if (type == 'B' || type == 'T' || type == 'J') 
+              {
+                std::string title = dbManager.get_title_by_id(id, type);
+                std::cout << "Title: " << title << std::endl;
+              } 
+              else 
+                std::cout << "Invalid type. Please enter B, T, or J.\n";
+              std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the buffer after reading a single character
               break;
             }
             default:
@@ -173,6 +195,7 @@ int main()
           std::vector<std::string> authors;
           std::string publisher;
           std::string subject;
+          float price;
           std::cout << "Enter book title: ";
           getline(std::cin, title);
           std::cout << "Enter author: ";
@@ -183,7 +206,8 @@ int main()
           getline(std::cin, publisher);
           std::cout << "Enter subject: ";
           getline(std::cin, subject);
-          dbManager.add_book(Book(0, title, authors, publisher, subject)); // Assuming ID is auto-incremented or not needed
+          price = validateUserInput<float>("Enter price: ", 0.0, std::numeric_limits<float>::max(), "Error reading price. Please enter a valid number.\n");
+          dbManager.add_book(Book(0, title, authors, publisher, subject, price)); // Assuming ID is auto-incremented or not needed
           std::cout << "Book added successfully.\n";
           break;
         }
@@ -272,6 +296,26 @@ int main()
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Flush the newline character out of the buffer
         break;
         }
+        case 9:
+        {
+          std::cout << "\n====================\n\n";
+          dbManager.display_average_book_price();
+          std::cout << "\n====================\n\n";
+          break;
+        }
+        case 10:
+        {
+          std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
+          dbManager.display_cheapest_book();
+          std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
+          break;
+        }
+
+        case 11:
+          std::cout << "\n<> ~~~~~~~~~~~~~~~~~~~~~~~~ <>\n\n";
+          dbManager.display_most_expensive_book();
+          std::cout << "\n<> ~~~~~~~~~~~~~~~~~~~~~~~~ <>\n\n";
+          break;
         case 12:
           std::cout << "Exiting program.\n";
           break;
