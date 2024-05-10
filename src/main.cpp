@@ -27,9 +27,10 @@ void displayMenu()
   std::cout << "3. Add New Journal\n";
   std::cout << "4. Add New Thesis\n";
   std::cout << "5. Add New Book\n";
-  std::cout << "6. Remove / Burn Entry\n";
-  std::cout << "7. Edit Entry\n";
-  std::cout << "8. Exit\n";
+  std::cout << "6. Display Total Number of Entries\n";
+  std::cout << "7. Remove / Burn Entry\n";
+  std::cout << "8. Edit Entry\n";
+  std::cout << "12. Exit\n";
   std::cout << "========================================\n";
   std::cout << "Enter your choice: ";
 }
@@ -65,10 +66,10 @@ int main()
     int choice = 0;
     std::cout << "Loading data from file...\n";
     dbManager.load_data_from_file("./literature_catalogue.dat");
-    while (choice != 8) 
+    while (choice != 12) 
     {
       displayMenu();
-      choice = validateUserInput<int>("Enter your choice: ", 1, 8, "Error: Invalid choice. Please enter a number between 1 and 8.\n");
+      choice = validateUserInput<int>("Enter your choice: ", 1, 12, "Error: Invalid choice. Please enter a number between 1 and 12.\n");
 
       switch (choice) 
       {
@@ -188,6 +189,30 @@ int main()
         }
         case 6:
         {
+          std::cout << "Select type of data to display count:\n";
+          std::cout << "1. All\n2. Books\n3. Theses\n4. Journals\nEnter choice: ";
+          int countChoice;
+          countChoice = validateUserInput<int>("Enter choice: ", 1, 4, "Invalid choice. Please enter a number between 1 and 4.\n");
+          switch(countChoice) {
+            case 1:
+              std::cout << "Total entries: " << dbManager.get_total_entries() << std::endl;
+              break;
+            case 2:
+              std::cout << "Total books: " << dbManager.get_total_books() << std::endl;
+              break;
+            case 3:
+              std::cout << "Total theses: " << dbManager.get_total_theses() << std::endl;
+              break;
+            case 4:
+              std::cout << "Total journals: " << dbManager.get_total_journals() << std::endl;
+              break;
+            default:
+              std::cout << "Invalid choice. Please enter a number between 1 and 4.\n";
+              break;
+          }
+          break;
+        case 7:
+        {
           std::cout << "Enter the type of literature to remove (book, thesis, journal): ";
           std::string type;
           getline(std::cin, type);
@@ -205,7 +230,7 @@ int main()
          }
           break;
       }
-      case 7:
+      case 8:
       {
         std::cout << "Enter the type of literature to edit (book, thesis, journal): ";
         std::string type;
@@ -247,7 +272,7 @@ int main()
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Flush the newline character out of the buffer
         break;
         }
-        case 8:
+        case 12:
           std::cout << "Exiting program.\n";
           break;
         default:
